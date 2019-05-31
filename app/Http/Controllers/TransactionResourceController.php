@@ -37,8 +37,9 @@ class TransactionResourceController extends Controller
     public function store(TransactionFormRequest $request)
     {
         //
-
-        dd("Yes here !");
+        $request->saveTransaction(new Transaction);
+        $request->session()->flash('status', 'Transaction was added successfully!');
+        return redirect()->back();
     }
 
     /**

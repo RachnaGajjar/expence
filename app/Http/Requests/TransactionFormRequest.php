@@ -4,6 +4,8 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use App\Rules\CustDate;
+use App\Transaction;
+use Carbon\Carbon;
 use Auth;
 
 class TransactionFormRequest extends FormRequest
@@ -32,5 +34,16 @@ class TransactionFormRequest extends FormRequest
             'tr_date' => ['required', new CustDate],
             'tr_type' => ['required', 'in:CR,DB']
         ];
+    }
+
+
+    public function saveTransaction(Transaction $transaction)
+    {
+        $transaction->amount = $this->amount;
+        $transaction->description = $this->description;
+        $transaction->tr_date = Carbon::createFromFormat('d M, Y', $this->tr_date);
+        $transaction->tr_type = $this->tr_type;
+        $transaction->user = Auth::user();
+        $transaction->save();
     }
 }

@@ -25,5 +25,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('user/profile', function () {
         // Uses first & second Middleware
     });
+
+    Route::get('/report/{year?}/{month?}/{date?}', 'ReportController@index')->middleware(['report-date'])->name('report');
+
 });
 
