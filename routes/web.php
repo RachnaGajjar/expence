@@ -30,3 +30,6 @@ Route::middleware(['auth'])->group(function () {
 
 });
 
+Route::post('/webhook/{extra?}', function() {
+	return response()->json(request());
+});
