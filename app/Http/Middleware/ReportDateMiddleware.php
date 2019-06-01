@@ -14,23 +14,29 @@ class ReportDateMiddleware
      * @param  \Closure  $next
      * @return mixed
      */
-    public function handle($request, Closure $next)
+    public function handle($request, Closure $next, $accuracy = 'date')
     {
         $today = Carbon::now();
-        if(!$request->year)
-        {
-            $request->year = $today->year;
-        }
-        if(!$request->month)
-        {
-            $request->month = $today->month;
-        }
-        if(!$request->date)
-        {
-            $request->date = $today->format('d');
-        }
-        foreach (['year', 'month', 'date'] as $key) {
-            $request->$key = (int)$request->$key;
+        $field_arr = ['date', 'month', 'year'];
+        $accuracy_index = array_search($accuracy, $field_arr); 
+        if($accuracy_index !== false) {
+            if(!$request->year && $accuracy_index <= 2)
+            {
+                $request->year = $today->year;
+            }
+            if(!$request->month && $accuracy_index <= 1)
+            {
+                $request->month = $today->month;
+            }
+            if(!$request->date && $accuracy_index == 0)
+            {
+                $request->date = $today->format('d');
+            }
+            foreach ($field_arr as $i => $field) {
+                if($accuracy_index <= $i) {
+                    $request->$field = (int)$request->$field;
+                }
+            }
         }
         return $next($request);
     }

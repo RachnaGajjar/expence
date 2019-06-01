@@ -45,4 +45,16 @@ class Transaction extends Model
 		
 	}
 
+	public static function getListOfMonthYear(User $user)
+	{
+		// SELECT count(id) as c, MONTH(`tr_date`) as m, YEAR(`tr_date`) as y FROM `transactions`  group by m, y ORDER BY y
+		return static::select([
+			DB::raw("COUNT(`id`) as count"),
+			DB::raw("YEAR(`tr_date`) as year"),
+			DB::raw("MONTH(`tr_date`) as month")
+		])->where('user_id', $user->id)
+		->groupBy(['year', 'month']);
+
+	}
+
 }

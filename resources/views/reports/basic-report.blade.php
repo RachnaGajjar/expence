@@ -5,7 +5,26 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">Report</div>
+                <div class="card-header">
+                    Report
+
+<div class="btn-group float-right">
+  <button type="button" class="btn btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    {{ \Carbon\Carbon::create($year, $month, 1)->format('M-Y') }}
+  </button>
+  <div class="dropdown-menu dropdown-menu-right">
+    @foreach($options as $opt)
+        @php $is_active = $year == $opt->year && $month == $opt->month; @endphp
+        <a
+            class="dropdown-item {{ $is_active ? 'active': ''}}"
+            href="{{ $is_active ? '#': route('report', ['year' => $opt->year, 'month' => $opt->month])}}">
+            {{ \Carbon\Carbon::create($opt->year, $opt->month, 1)->format('M-Y') }}
+        </a>
+    @endforeach
+  </div>
+</div>
+
+                </div>
 
                 <div class="card-body">
 
@@ -56,7 +75,7 @@
                         </table>
                     @else
                         No records to display.
-                        <a href="{{ route('home') }}">Let's make some entry for {{ $dt }}</a>
+                        <a href="{{ route('home') }}">Let's make some entry</a>
                     @endif
 
                 </div>
